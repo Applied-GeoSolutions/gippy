@@ -53,8 +53,8 @@ namespace gip {
         //! \name Constructors/Destructors
         //! Constructor for new band
         GeoRaster(const GeoResource& georesource, int bandnum=1)
-            : GeoResource(georesource), _NoData(false), _ValidStats(false),
-            _minDC(1), _maxDC(255) {
+            : GeoResource(georesource), _NoData(false), _ValidStats(false)
+        {
             LoadBand(bandnum);
         }
         //! Copy constructor
@@ -198,13 +198,6 @@ namespace gip {
             SetNoData(val);
             return *this;
         }*/
-
-        //! \name Calibration and atmospheric functions
-        //! Sets dyanmic range of sensor (min to max digital counts)
-        void SetDynamicRange(int min, int max) {
-            _minDC = min;
-            _maxDC = max;
-        }
 
         //! \name Processing functions
 
@@ -394,16 +387,16 @@ namespace gip {
         template<class T> GeoRaster& Process(GeoRaster& raster);
 
          //! Get Saturation mask: 1's where it's saturated
-        CImg<unsigned char> SaturationMask(iRect chunk=iRect()) const {
+        CImg<unsigned char> SaturationMask(float maxDC, iRect chunk=iRect()) const {
             switch (DataType()) {
-                case GDT_Byte: return _Mask<unsigned char>(_maxDC, chunk);
-                case GDT_UInt16: return _Mask<unsigned short>(_maxDC, chunk);
-                case GDT_Int16: return _Mask<short>(_maxDC, chunk);
-                case GDT_UInt32: return _Mask<unsigned int>(_maxDC, chunk);
-                case GDT_Int32: return _Mask<int>(_maxDC, chunk);
-                case GDT_Float32: return _Mask<float>(_maxDC, chunk);
-                case GDT_Float64: return _Mask<double>(_maxDC, chunk);
-                default: return _Mask<double>(_maxDC, chunk);
+                case GDT_Byte: return _Mask<unsigned char>(maxDC, chunk);
+                case GDT_UInt16: return _Mask<unsigned short>(maxDC, chunk);
+                case GDT_Int16: return _Mask<short>(maxDC, chunk);
+                case GDT_UInt32: return _Mask<unsigned int>(maxDC, chunk);
+                case GDT_Int32: return _Mask<int>(maxDC, chunk);
+                case GDT_Float32: return _Mask<float>(maxDC, chunk);
+                case GDT_Float64: return _Mask<double>(maxDC, chunk);
+                default: return _Mask<double>(maxDC, chunk);
             }
         }
 
@@ -483,10 +476,6 @@ namespace gip {
         //! Statistics
         mutable CImg<double> _Stats;
 
-        // Constants
-        int _minDC;
-        int _maxDC;
-
         //! List of processing functions to apply on reads (in class GeoProcess)
         //std::vector< boost::function< CImg<double>& (CImg<double>&) > > _Functions;
         std::vector<func> _Functions;
@@ -565,7 +554,7 @@ namespace gip {
         bool updatenodata = false;
         // Convert data to radiance (if not raw requested)
         if (Gain() != 1.0 || Offset() != 0.0) {
-            img = Gain() * (img-_minDC) + Offset();
+            img = Gain() * img + Offset();
             // Update NoData now so applied functions have proper NoData value set (?)
             if (NoData()) {
                 cimg_forXY(img,x,y) {
