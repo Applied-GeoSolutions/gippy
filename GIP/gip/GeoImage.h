@@ -370,20 +370,20 @@ namespace gip {
         }
 
         //! Saturation mask (all bands).  1's where it is saturated
-        CImg<unsigned char> SaturationMask(std::vector<std::string> bands, iRect chunk=iRect()) const {
+        CImg<unsigned char> SaturationMask(std::vector<std::string> bands, float maxDC iRect chunk=iRect()) const {
             std::vector<int> ibands = Descriptions2Indices(bands);
             CImg<unsigned char> mask;
             for (std::vector<int>::const_iterator i=ibands.begin(); i!=ibands.end(); i++) {
                 if (i==ibands.begin()) 
-                    mask = CImg<unsigned char>(_RasterBands[*i].SaturationMask(chunk));
+                    mask = CImg<unsigned char>(_RasterBands[*i].SaturationMask(maxDC, chunk));
                 else
-                    mask|=_RasterBands[*i].SaturationMask(chunk);
+                    mask|=_RasterBands[*i].SaturationMask(maxDC, chunk);
             }
             return mask;
         }
 
-        CImg<unsigned char> SaturationMask(iRect chunk=iRect()) const {
-            return SaturationMask({}, chunk);
+        CImg<unsigned char> SaturationMask(float maxDC, iRect chunk=iRect()) const {
+            return SaturationMask({}, maxDC, chunk);
         }
 
         //! Whiteness (created from red, green, blue)
