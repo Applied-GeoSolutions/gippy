@@ -370,7 +370,7 @@ namespace gip {
         }
 
         //! Saturation mask (all bands).  1's where it is saturated
-        CImg<unsigned char> SaturationMask(std::vector<std::string> bands, float maxDC iRect chunk=iRect()) const {
+        CImg<unsigned char> SaturationMask(std::vector<std::string> bands, float maxDC, iRect chunk=iRect()) const {
             std::vector<int> ibands = Descriptions2Indices(bands);
             CImg<unsigned char> mask;
             for (std::vector<int>::const_iterator i=ibands.begin(); i!=ibands.end(); i++) {
