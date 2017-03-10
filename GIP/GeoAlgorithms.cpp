@@ -220,7 +220,7 @@ namespace gip {
             clouds = imgout[b_pass1].Read<unsigned char>(chunk).mul(image.NoDataMask(bands_used, chunk)^=1);
             // should this be a |= ?
             if (addclouds) clouds += imgout[b_ambclouds].Read<unsigned char>(chunk);
-            clouds|=(image.SaturationMask(bands_used, chunk));
+            clouds|=(image.SaturationMask(bands_used, 255, chunk));
             // Majority filter
             //clouds|=clouds.get_convolve(filter).threshold(majority));
             if (erode > 0)
@@ -508,8 +508,8 @@ namespace gip {
                 & white.get_threshold(0.7,false,true)^=1
                 & nir.get_div(swir1).threshold(0.75);
 
-            redsatmask = image["RED"].SaturationMask(chunks[iChunk]);
-            greensatmask = image["GREEN"].SaturationMask(chunks[iChunk]);
+            redsatmask = image["RED"].SaturationMask(255, chunks[iChunk]);
+            greensatmask = image["GREEN"].SaturationMask(255, chunks[iChunk]);
             vprob = red;
             // Calculate "variability probability"
             cimg_forXY(vprob,x,y) {
