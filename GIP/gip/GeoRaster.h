@@ -253,6 +253,9 @@ namespace gip {
         GeoRaster operator==(const double &val) const {
             return GeoRaster(*this, boost::bind(boost::mem_fn<CImg<double>&,CImg<double>,const double&>(&CImg<double>::operator==), _1, val));
         }        
+        GeoRaster operator!=(const double &val) const {
+            return GeoRaster(*this, boost::bind(boost::mem_fn<CImg<double>&,CImg<double>,const double&>(&CImg<double>::operator!=), _1, val));
+        }        
         //! Bitwise XOR
         GeoRaster BXOR(const double &val) const {
             return GeoRaster(*this, boost::bind(boost::mem_fn<CImg<double>&,CImg<double>,const double&>(&CImg<double>::operator^=), _1, 1) );
