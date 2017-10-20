@@ -733,6 +733,9 @@ namespace gip {
         colors["isti"] = {"SWIR1","SWIR2"};
         colors["sti"] = {"SWIR1","SWIR2"};
 
+        colors["mtci"] = {"RED","REDEDGE1","REDEDGE2",};
+        colors["s2rep"] = {"RED","REDEDGE1","REDEDGE2", "NIR",};
+
         // Figure out what colors are needed
         std::set< string > used_colors;
         std::set< string >::const_iterator isstr;
@@ -749,6 +752,7 @@ namespace gip {
         }
 
         CImg<float> red, green, blue, nir, swir1, swir2, cimgout, cimgmask, tmpimg;
+        CImg<float>  rededge1,  rededge2,  rededge3,  rededge4;  //Sentinel-2
 
         ChunkSet chunks(image.XSize(),image.YSize());
 
@@ -762,6 +766,10 @@ namespace gip {
                 else if (*isstr == "NIR") nir = image["NIR"].Read<float>(chunks[iChunk]);
                 else if (*isstr == "SWIR1") swir1 = image["SWIR1"].Read<float>(chunks[iChunk]);
                 else if (*isstr == "SWIR2") swir2 = image["SWIR2"].Read<float>(chunks[iChunk]);
+                else if (*isstr == "REDEDGE1") rededge1 = image["REDEDGE1"].Read<float>(chunks[iChunk]);
+                else if (*isstr == "REDEDGE2") rededge1 = image["REDEDGE2"].Read<float>(chunks[iChunk]);
+                else if (*isstr == "REDEDGE3") rededge1 = image["REDEDGE3"].Read<float>(chunks[iChunk]);
+                else if (*isstr == "REDEDGE4") rededge1 = image["REDEDGE4"].Read<float>(chunks[iChunk]);
             }
 
             for (iprod=products.begin(); iprod!=products.end(); iprod++) {
@@ -800,6 +808,11 @@ namespace gip {
                     cimgout = swir2.div(swir1);
                 } else if (prodname == "sti") {
                     cimgout = swir1.div(swir2);
+                // Sentinel-2 specific
+                } else if (prodname == "mtci") {
+                    cimgout = (rededge2-rededge1).div(rededge1-red);
+                } else if (prodname == "s2rep") {
+                    cimgout = 705 + (17.5*(nir+red)-rededge1).div(rededge2-rededge1);
                 }
                 // TODO don't read mask again...create here
                 cimgmask = image.NoDataMask(colors[prodname], chunks[iChunk]);
