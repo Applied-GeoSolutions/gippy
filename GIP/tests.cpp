@@ -22,6 +22,7 @@
 #include <iostream>
 #include <gip/tests.h>
 #include <gip/Utils.h>
+#include <gip/GeoAlgorithms.h>
 
 namespace gip {
     using std::string;
@@ -94,6 +95,18 @@ namespace gip {
         else cout << "Test failed" << endl;
         return img;
     }
+
+    GeoImage test_s2_mtci(string filename) {
+        cout << "Reading test: " << filename << endl;
+        GeoImage img(filename);
+        dictionary products ;
+        dictionary metadata ;
+        products["mtci"] = "/tmp/mtci_test.tif" ;
+        cout << img.Info() << endl;
+        gip::algorithms::Indices(img, products, metadata) ;
+        return img;
+    }
+
 
 
 } // namespace gip

@@ -32,6 +32,8 @@ namespace gip {
 
     GeoImage test_padded_chunk_registration(int=5, int=10);
 
+    GeoImage test_s2_mtci(std::string filename);
+
     /*template<class T> CImg<T> _test(CImg<T> cimg) {
         //std::cout << "GIPPY CImg input/output test" << std::endl;
         //std::cout << "typeid = " << typeid(T) << std::endl;
