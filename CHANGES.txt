@@ -18,6 +18,9 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 ################################################################################
+v0.3.12:
+- Added some Sentinel-2 REDEDGE based products
+
 v0.3.11:
 - BXOR typo fixed
 
