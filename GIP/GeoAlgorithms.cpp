@@ -767,9 +767,9 @@ namespace gip {
                 else if (*isstr == "SWIR1") swir1 = image["SWIR1"].Read<float>(chunks[iChunk]);
                 else if (*isstr == "SWIR2") swir2 = image["SWIR2"].Read<float>(chunks[iChunk]);
                 else if (*isstr == "REDEDGE1") rededge1 = image["REDEDGE1"].Read<float>(chunks[iChunk]);
-                else if (*isstr == "REDEDGE2") rededge1 = image["REDEDGE2"].Read<float>(chunks[iChunk]);
-                else if (*isstr == "REDEDGE3") rededge1 = image["REDEDGE3"].Read<float>(chunks[iChunk]);
-                else if (*isstr == "REDEDGE4") rededge1 = image["REDEDGE4"].Read<float>(chunks[iChunk]);
+                else if (*isstr == "REDEDGE2") rededge2 = image["REDEDGE2"].Read<float>(chunks[iChunk]);
+                else if (*isstr == "REDEDGE3") rededge3 = image["REDEDGE3"].Read<float>(chunks[iChunk]);
+                else if (*isstr == "REDEDGE4") rededge4 = image["REDEDGE4"].Read<float>(chunks[iChunk]);
             }
 
             for (iprod=products.begin(); iprod!=products.end(); iprod++) {
