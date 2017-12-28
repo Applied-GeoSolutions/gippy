@@ -239,7 +239,7 @@ namespace gip {
             if (proj == "")
                 proj = feature.srs();
             // transform extent to desired srs
-            ext.transform(geoimgs[0].srs(), proj);
+            ext = ext.transform(geoimgs[0].srs(), proj);
             if (crop) {
                 BoundingBox fext = feature.extent();
                 // limit to feature extent
