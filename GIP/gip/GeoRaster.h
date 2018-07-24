@@ -111,10 +111,10 @@ namespace gip {
                 _GDALRasterBand->SetColorInterpretation(gdalcol);
             }
         }
-        //! Copy category names from another band
-        void CopyCategoryNames(const GeoRaster& raster) {
-            _GDALRasterBand->SetCategoryNames(raster.GetGDALRasterBand()->GetCategoryNames());
-        }
+        /* //! Copy category names from another band */
+        /* void CopyCategoryNames(const GeoRaster& raster) { */
+        /*     _GDALRasterBand->SetCategoryNames(raster.GetGDALRasterBand()->GetCategoryNames()); */
+        /* } */
         //! Get GDAL Unit type
         std::string Units() const {
             std::string units( _GDALRasterBand->GetUnitType() );
@@ -641,7 +641,7 @@ namespace gip {
     //! Process into input band "raster"
     template<class T> GeoRaster& GeoRaster::Process(GeoRaster& raster) {
         GDALRasterBand* band = raster.GetGDALRasterBand();
-        raster.CopyCategoryNames(*this);
+        /* raster.CopyCategoryNames(*this); */
         band->SetDescription(_GDALRasterBand->GetDescription());
         band->SetColorInterpretation(_GDALRasterBand->GetColorInterpretation());
         band->SetMetadata(_GDALRasterBand->GetMetadata());
