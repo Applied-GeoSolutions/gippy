@@ -7,3 +7,6 @@ dist/
 src/
 gippy.egg-info/
 GIP/bin/
+venv*
+*venv
+

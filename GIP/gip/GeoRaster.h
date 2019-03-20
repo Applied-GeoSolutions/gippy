@@ -421,44 +421,44 @@ namespace gip {
             return NoDataMask(chunk)^=1;
         }
 
-        //! Smooth/convolution (3x3) taking into account NoDataValue
-        GeoRaster Smooth(GeoRaster raster) {
-            CImg<double> kernel(3,3,1,1,1);
-            int m0((kernel.width())/2);
-            int n0((kernel.height())/2);
-            int border(std::max(m0,n0));
-            double total, norm;
-            CImg<double> cimg0, cimg, subcimg;
+        /* //! Smooth/convolution (3x3) taking into account NoDataValue */
+        /* GeoRaster Smooth(GeoRaster raster) { */
+        /*     CImg<double> kernel(3,3,1,1,1); */
+        /*     int m0((kernel.width())/2); */
+        /*     int n0((kernel.height())/2); */
+        /*     int border(std::max(m0,n0)); */
+        /*     double total, norm; */
+        /*     CImg<double> cimg0, cimg, subcimg; */
 
-            ChunkSet chunks(XSize(),YSize());
-            chunks.Padding(border);
-            for (unsigned int iChunk=0; iChunk<chunks.Size(); iChunk++) {
-                cimg0 = Read<double>(chunks[iChunk]);
-                cimg = cimg0;
-                cimg_for_insideXY(cimg,x,y,border) {
-                    subcimg = cimg0.get_crop(x-m0,y-n0,x+m0,y+m0);
-                    total = 0;
-                    norm = 0;
-                    cimg_forXY(kernel,m,n) {
-                        if (subcimg(m,n) != NoDataValue()) {
-                            total = total + (subcimg(m,n) * kernel(m,n));
-                            norm = norm + kernel(m,n);
-                        }
-                    }
-                    if (norm == 0)
-                        cimg(x,y) = raster.NoDataValue();
-                    else
-                        cimg(x,y) = total/norm;
-                    if (cimg(x,y) == NoDataValue()) cimg(x,y) = raster.NoDataValue();
-                }
-                // Update nodata values in border region
-                cimg_for_borderXY(cimg,x,y,border) {
-                    if (cimg(x,y) == NoDataValue()) cimg(x,y) = raster.NoDataValue();
-                }
-                raster.Write(cimg, chunks[iChunk]);
-            }
-            return raster;
-        }
+        /*     ChunkSet chunks(XSize(),YSize()); */
+        /*     chunks.Padding(border); */
+        /*     for (unsigned int iChunk=0; iChunk<chunks.Size(); iChunk++) { */
+        /*         cimg0 = Read<double>(chunks[iChunk]); */
+        /*         cimg = cimg0; */
+        /*         cimg_for_insideXY(cimg,x,y,border) { */
+        /*             subcimg = cimg0.get_crop(x-m0,y-n0,x+m0,y+m0); */
+        /*             total = 0; */
+        /*             norm = 0; */
+        /*             cimg_forXY(kernel,m,n) { */
+        /*                 if (subcimg(m,n) != NoDataValue()) { */
+        /*                     total = total + (subcimg(m,n) * kernel(m,n)); */
+        /*                     norm = norm + kernel(m,n); */
+        /*                 } */
+        /*             } */
+        /*             if (norm == 0) */
+        /*                 cimg(x,y) = raster.NoDataValue(); */
+        /*             else */
+        /*                 cimg(x,y) = total/norm; */
+        /*             if (cimg(x,y) == NoDataValue()) cimg(x,y) = raster.NoDataValue(); */
+        /*         } */
+        /*         // Update nodata values in border region */
+        /*         cimg_for_borderXY(cimg,x,y,border) { */
+        /*             if (cimg(x,y) == NoDataValue()) cimg(x,y) = raster.NoDataValue(); */
+        /*         } */
+        /*         raster.Write(cimg, chunks[iChunk]); */
+        /*     } */
+        /*     return raster; */
+        /* } */
 
     protected:
         // TODO - examine why not shared pointer? (I think because it's managed by GDALDataset class)
@@ -514,8 +514,8 @@ namespace gip {
         if (chunk.Padding() > 0) chunk = chunk.Pad().Intersect(Rect<int>(0,0,XSize(),YSize()));
 
         // This doesn't check for in bounds, should it?
-        int width = chunk.x1()-chunk.x0()+1;
-        int height = chunk.y1()-chunk.y0()+1;
+        int width = chunk.width();
+        int height = chunk.height();
 
         T* ptrPixels = new T[width*height];
         CPLErr err = _GDALRasterBand->RasterIO(GF_Read, chunk.x0(), chunk.y0(), width, height, 
@@ -597,7 +597,7 @@ namespace gip {
         if (chunk.Padding() > 0) {
             Rect<int> pchunk = chunk.get_Pad().Intersect(Rect<int>(0,0,XSize(),YSize()));
             Point<int> p0(chunk.p0()-pchunk.p0());
-            Point<int> p1 = p0 + Point<int>(chunk.width()-1,chunk.height()-1);
+            Point<int> p1 = p0 + Point<int>(chunk.width(),chunk.height());
             img.crop(p0.x(),p0.y(),p1.x(),p1.y());
         }
 
