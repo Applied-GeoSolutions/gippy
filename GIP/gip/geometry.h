@@ -248,7 +248,7 @@ namespace gip {
         //! Copy constructor
         ChunkSet(const ChunkSet& chunks)
             : _xsize(chunks._xsize), _ysize(chunks._ysize), _padding(chunks._padding) {
-            ChunkUp(chunks.Size());
+            _Chunks = chunks._Chunks ;
         }
 
         //! Assignment copy
@@ -257,7 +257,7 @@ namespace gip {
             _xsize = chunks._xsize;
             _ysize = chunks._ysize;
             _padding = chunks._padding;
-            ChunkUp(chunks.Size());
+            _Chunks = chunks._Chunks ;
             return *this;
         }
         ~ChunkSet() {}
@@ -309,7 +309,7 @@ namespace gip {
                 rows = rows > YSize() ? YSize() : rows;
                 numchunks = ceil( YSize()/(float)rows );
             } else {
-                rows = int(YSize() / numchunks);
+                rows = ceil(YSize() / (float)numchunks);
             }
 
             _Chunks.clear();
