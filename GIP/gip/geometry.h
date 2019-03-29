@@ -73,7 +73,7 @@ namespace gip {
         Rect() : _p0(0,0), _p1(-1,-1), _padding(0) {}
         //! Constructor takes in top left coordinate and width/height
         Rect(T x, T y, T width, T height) 
-            : _p0(x,y), _p1(x+width-1,y+height-1), _padding(0) {
+            : _p0(x,y), _p1(x+width,y+height), _padding(0) {
             // Validate, x0 and y0 should always be the  min values
             /*if (_width < 0) {
                 _width = abs(m_width);
@@ -113,9 +113,9 @@ namespace gip {
         //! Area of the Rect
         T area() const { return abs(width()*height()); }
         //! Width of Rect
-        T width() const { return _p1.x()-_p0.x()+1; }
+        T width() const { return _p1.x()-_p0.x(); }
         //! Height of Rect
-        T height() const { return _p1.y()-_p0.y()+1; }
+        T height() const { return _p1.y()-_p0.y(); }
         //! Left x coordinate
         T x0() const { return _p0.x(); }
         //! Top y coordinate
@@ -248,7 +248,7 @@ namespace gip {
         //! Copy constructor
         ChunkSet(const ChunkSet& chunks)
             : _xsize(chunks._xsize), _ysize(chunks._ysize), _padding(chunks._padding) {
-            ChunkUp(chunks.Size());
+            _Chunks = chunks._Chunks ;
         }
 
         //! Assignment copy
@@ -257,7 +257,7 @@ namespace gip {
             _xsize = chunks._xsize;
             _ysize = chunks._ysize;
             _padding = chunks._padding;
-            ChunkUp(chunks.Size());
+            _Chunks = chunks._Chunks ;
             return *this;
         }
         ~ChunkSet() {}
@@ -309,7 +309,7 @@ namespace gip {
                 rows = rows > YSize() ? YSize() : rows;
                 numchunks = ceil( YSize()/(float)rows );
             } else {
-                rows = int(YSize() / numchunks);
+                rows = ceil(YSize() / (float)numchunks);
             }
 
             _Chunks.clear();
