@@ -70,7 +70,7 @@ namespace gip {
     template<typename T=int> class Rect {
     public:
         //! Default Constructor
-        Rect() : _p0(0,0), _p1(-1,-1), _padding(0) {}
+        Rect() : _p0(0,0), _p1(0,0), _padding(0) {}
         //! Constructor takes in top left coordinate and width/height
         Rect(T x, T y, T width, T height) 
             : _p0(x,y), _p1(x+width,y+height), _padding(0) {
@@ -237,27 +237,40 @@ namespace gip {
     public:
         //! Default constructor
         ChunkSet()
-            : _xsize(0), _ysize(0), _padding(0) {}
+            : _xsize(0), _ysize(0), _padding(0) {
+            // std::cerr << "ChunkSet DefaultConstructor (x, y, pad) = (0, 0, 0)" << std::endl ;
+            // std::cerr << "ChunkSet._Chunks.size() = " << _Chunks.size() << std::endl ;
+        }
 
         //! Constructor taking in image size
         ChunkSet(unsigned int xsize, unsigned int ysize, unsigned int padding=0, unsigned int numchunks=0)
             : _xsize(xsize), _ysize(ysize), _padding(padding) {
+            // std::cerr << "ChunkSet SpecificConstructor (x, y, pad, numchunks) = ("
+            //           << _xsize << ", " << _ysize << ", " << _padding << ", " << numchunks << ")" << std::endl ;
             ChunkUp(numchunks);
         }
 
         //! Copy constructor
         ChunkSet(const ChunkSet& chunks)
             : _xsize(chunks._xsize), _ysize(chunks._ysize), _padding(chunks._padding) {
+            // std::cerr << "ChunkSet CopyConstructor (x, y, pad) = ("
+            //           << _xsize << ", " << _ysize << ", " << _padding << ")" << std::endl ;
             _Chunks = chunks._Chunks ;
         }
 
         //! Assignment copy
         ChunkSet& operator=(const ChunkSet& chunks) {
-            if (this == & chunks) return *this;
+            if (this == & chunks) {
+                // std::cerr << "ChunkSet assign to self" << std::endl ;
+                return *this;
+            }
             _xsize = chunks._xsize;
             _ysize = chunks._ysize;
             _padding = chunks._padding;
             _Chunks = chunks._Chunks ;
+            int size(_Chunks.size()) ;
+            // std::cerr << "ChunkSet CopyConstructor (x, y, pad, _chunks.size()) = ("
+            //           << _xsize << ", " << _ysize << ", " << _padding << ", " << size << ")" << std::endl ;
             return *this;
         }
         ~ChunkSet() {}
@@ -270,7 +283,9 @@ namespace gip {
 
         //! Determine if region is valid
         bool Valid() const {
-            return (((_xsize * _ysize) == 0) || (Size() == 0)) ? false : true;
+            bool valid = (((_xsize * _ysize) == 0) || (Size() == 0)) ? false : true;
+            // std::cerr << "ChunkSet Valid? " << valid << std::endl ;
+            return valid ;
         }
 
         //! Get number of chunks
